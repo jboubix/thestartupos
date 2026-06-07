@@ -16,12 +16,16 @@ spec:
     matchLabels:
       app: startupos
       component: odoo
+      managed-by: kustomize
+      project: thestartupos
       role: tenant
   template:
     metadata:
       labels:
         app: startupos
         component: odoo
+        managed-by: kustomize
+        project: thestartupos
         role: tenant
         version: "19.1"
     spec:
@@ -37,7 +41,7 @@ spec:
               # OCA repos in the image (matches docker/clone-oca.sh).
               # We can't enumerate /opt/oca here because the init container image is busybox,
               # not the Odoo image (init containers run before COPY applies).
-              OCA="/opt/oca/web,/opt/oca/server-ux,/opt/oca/server-backend,/opt/oca/server-tools,/opt/oca/sale-workflow,/opt/oca/account-financial-tools,/opt/oca/account-financial-reporting,/opt/oca/account-reconcile,/opt/oca/bank-payment,/opt/oca/mis-builder,/opt/oca/partner-contact,/opt/oca/project,/opt/oca/hr,/opt/oca/hr-expense,/opt/oca/hr-timesheet,/opt/oca/helpdesk,/opt/oca/social,/opt/oca/knowledge,/opt/oca/survey,/opt/oca/stock-logistics-workflow,/opt/oca/purchase-workflow,/opt/oca/manufacture,/opt/oca/fleet,/opt/oca/tier-validation,/opt/oca/maintenance,/opt/oca/field-service,/opt/oca/queue,/opt/oca/currency"
+              OCA="/opt/oca/web,/opt/oca/server-ux,/opt/oca/server-backend,/opt/oca/server-tools,/opt/oca/sale-workflow,/opt/oca/account-financial-tools,/opt/oca/account-financial-reporting,/opt/oca/reporting-engine,/opt/oca/account-reconcile,/opt/oca/bank-payment,/opt/oca/mis-builder,/opt/oca/partner-contact,/opt/oca/project,/opt/oca/hr,/opt/oca/hr-expense,/opt/oca/hr-timesheet,/opt/oca/helpdesk,/opt/oca/social,/opt/oca/knowledge,/opt/oca/survey,/opt/oca/stock-logistics-workflow,/opt/oca/purchase-workflow,/opt/oca/manufacture,/opt/oca/fleet,/opt/oca/tier-validation,/opt/oca/maintenance,/opt/oca/field-service,/opt/oca/queue,/opt/oca/currency"
               ADDONS="${OCA},/mnt/extra-addons/startupos,/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons"
               sed -e "s|__ODOO_MASTER_PASS__|${PASS}|g" \
                   -e "s|__DB_HOST__|startupos-tenant-db-rw.startupos.svc.cluster.local|g" \
@@ -56,7 +60,7 @@ spec:
               mountPath: /etc/db-credentials
       containers:
         - name: odoo
-          # Custom image: Odoo 19.0 + 28 OCA repos + 15 startupos_* modules.
+          # Custom image: Odoo 19.0 + OCA repos + 15 startupos_* modules.
           # Built locally and imported via `k3s ctr images import` (no GHCR needed).
           image: ghcr.io/jboubix/thestartupos-tenant-odoo:19.0
           imagePullPolicy: Never

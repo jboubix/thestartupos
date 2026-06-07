@@ -14,10 +14,8 @@ See https://thestartupos.com for the platform overview.
     ''',
     'author': 'The Startup OS',
     'website': 'https://thestartupos.com',
-    'depends': ['base', 'mail', 'marketing'],
-    'data': [
-        'security/ir.model.access.csv',
-    ],
+    'depends': ['base', 'mail'],
+    'data': [],
     'demo': [],
     'installable': True,
     'application': False,

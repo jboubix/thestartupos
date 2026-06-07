@@ -76,6 +76,32 @@ class StartupTenant(models.Model):
     def name_get(self):
         return [(t.id, f"{t.name} ({t.subdomain}.thestartupos.com)") for t in self]
 
+    def action_provision(self):
+        """Mark a tenant as provisioned.
+
+        Real DB provisioning will live in startupos_platform_provisioning; this
+        stub keeps the platform core installable and gives admins a safe action.
+        """
+        for tenant in self:
+            tenant.write({
+                'provisioned_at': fields.Datetime.now(),
+                'state': 'active',
+            })
+            tenant.message_post(body=_("Tenant marked as provisioned."))
+        return True
+
+    def action_suspend(self):
+        for tenant in self:
+            tenant.write({'state': 'suspended'})
+            tenant.message_post(body=_("Tenant suspended."))
+        return True
+
+    def action_reactivate(self):
+        for tenant in self:
+            tenant.write({'state': 'active'})
+            tenant.message_post(body=_("Tenant reactivated."))
+        return True
+
     @api.model
     def create_from_signup(self, vals):
         """Hook called by the signup flow. Creates the DB, installs modules, returns the tenant."""

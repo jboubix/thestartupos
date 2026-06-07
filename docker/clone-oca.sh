@@ -15,6 +15,7 @@ REPOS=(
     sale-workflow
     account-financial-tools
     account-financial-reporting
+    reporting-engine
     account-reconcile
     bank-payment
     mis-builder

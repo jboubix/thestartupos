@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Tenant tree view -->
-    <record id="view_tenant_tree" model="ir.ui.view">
-        <field name="name">startupos.tenant.tree</field>
+    <!-- Tenant list view -->
+    <record id="view_tenant_list" model="ir.ui.view">
+        <field name="name">startupos.tenant.list</field>
         <field name="model">startupos.tenant</field>
         <field name="arch" type="xml">
-            <tree decoration-success="state=='active'" decoration-warning="state=='past_due'" decoration-muted="state=='cancelled' or state=='suspended'">
+            <list decoration-success="state=='active'" decoration-warning="state=='past_due'" decoration-muted="state=='cancelled' or state=='suspended'">
                 <field name="name"/>
                 <field name="subdomain"/>
                 <field name="plan_id"/>
@@ -14,7 +14,7 @@
                 <field name="storage_used_mb"/>
                 <field name="ai_calls_this_month"/>
                 <field name="last_login_at"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -25,9 +25,9 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_provision" string="(Re)Provision" type="object" class="btn-primary" attrs="{'invisible': [('provisioned_at','!=',False)]}"/>
-                    <button name="action_suspend" string="Suspend" type="object" attrs="{'invisible': [('state','=','suspended')]}"/>
-                    <button name="action_reactivate" string="Reactivate" type="object" attrs="{'invisible': [('state','!=','suspended')]}"/>
+                    <button name="action_provision" string="(Re)Provision" type="object" class="btn-primary" invisible="provisioned_at"/>
+                    <button name="action_suspend" string="Suspend" type="object" invisible="state == 'suspended'"/>
+                    <button name="action_reactivate" string="Reactivate" type="object" invisible="state != 'suspended'"/>
                     <field name="state" widget="statusbar" statusbar_visible="trial,active,past_due,suspended"/>
                 </header>
                 <sheet>
@@ -87,6 +87,6 @@
     <record id="action_tenants" model="ir.actions.act_window">
         <field name="name">Tenants</field>
         <field name="res_model">startupos.tenant</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>

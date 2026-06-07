@@ -10,6 +10,13 @@ tunnelRef:
   kind: ClusterTunnel
   name: global-tunnel
 subjects:
+  # Apex — public/base domain routes to the platform DB (`thestartupos`).
+  # Odoo --db-filter=%d maps thestartupos.com -> DB `thestartupos`.
+  - name: startupos-tenant-odoo
+    spec:
+      fqdn: "thestartupos.com"
+      http2Origin: false
+      noTlsVerify: false
   # Wildcard — every tenant subdomain routes to the multi-DB Odoo process.
   # The Host header carries the subdomain; Odoo --db-filter=%d resolves to the tenant DB.
   - name: startupos-tenant-odoo
