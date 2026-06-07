@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_startupos_expenses_user,startupos_expenses user,model_startupos_expenses,base.group_user,1,0,0,0

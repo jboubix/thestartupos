@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_startupos_platform_provisioning_user,startupos_platform_provisioning user,model_startupos_platform_provisioning,base.group_user,1,0,0,0
