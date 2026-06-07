@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: startupos-tenant-odoo
+  namespace: startupos
+  labels:
+    app: startupos
+    component: odoo
+    role: tenant
+    version: "19.1"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate                             # PVC + db-filter — only one replica
+  selector:
+    matchLabels:
+      app: startupos
+      component: odoo
+      role: tenant
+  template:
+    metadata:
+      labels:
+        app: startupos
+        component: odoo
+        role: tenant
+        version: "19.1"
+    spec:
+      initContainers:
+        - name: init-addons
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              chown 101:101 /mnt/extra-addons
+              chmod 755 /mnt/extra-addons
+          volumeMounts:
+            - name: odoo-addons
+              mountPath: /mnt/extra-addons
+      containers:
+        - name: odoo
+          image: ghcr.io/jboubix/thestartupos-tenant-odoo:19.1
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config=/config/odoo.conf
+            - --proxy-mode
+            - --db-filter=^%d$
+            - --workers=4
+            - --max-cron-threads=1
+            - --without-demo=True
+            - --log-level=info
+            - --log-handler=:INFO
+          ports:
+            - containerPort: 8069
+              name: http
+              protocol: TCP
+            - containerPort: 8072
+              name: longpoll
+              protocol: TCP
+          env:
+            - name: HOST
+              value: startupos-tenant-db-rw.startupos.svc.cluster.local
+            - name: PORT
+              value: "5432"
+            - name: USER
+              value: postgres
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: startupos-tenant-db-credentials
+                  key: password
+            - name: DB_NAME
+              value: postgres
+            - name: EXTRA_ADDONS
+              value: /mnt/extra-addons
+            - name: ODOO_MASTER_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: startupos-tenant-secrets
+                  key: odoo-master-pass
+          volumeMounts:
+            - name: odoo-data
+              mountPath: /var/lib/odoo
+              subPath: data
+            - name: odoo-addons
+              mountPath: /mnt/extra-addons
+            - name: odoo-config
+              mountPath: /config
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
+          livenessProbe:
+            httpGet:
+              path: /web/health
+              port: 8069
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /web/health
+              port: 8069
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /web/health
+              port: 8069
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+      volumes:
+        - name: odoo-data
+          persistentVolumeClaim:
+            claimName: startupos-tenant-odoo-data
+        - name: odoo-addons
+          persistentVolumeClaim:
+            claimName: startupos-tenant-odoo-addons
+        - name: odoo-config
+          configMap:
+            name: startupos-tenant-odoo-config

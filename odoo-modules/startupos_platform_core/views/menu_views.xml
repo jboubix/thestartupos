@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_startupos_root" name="StartupOS" web_icon="startupos_platform_core,static/description/icon.png" sequence="5">
+        <menuitem id="menu_startupos_tenants" name="Tenants" action="action_tenants" sequence="10"/>
+        <menuitem id="menu_startupos_plans" name="Plans" action="action_plans" sequence="20"/>
+    </menuitem>
+</odoo>

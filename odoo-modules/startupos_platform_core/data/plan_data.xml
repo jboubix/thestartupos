@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="plan_solo" model="startupos.plan">
+            <field name="name">Solo — $19/mo</field>
+            <field name="code">solo</field>
+            <field name="price_monthly">19.0</field>
+            <field name="max_users">1</field>
+            <field name="ai_calls_per_month">200</field>
+            <field name="storage_gb">1</field>
+            <field name="description">For solo founders. CRM, sales, invoicing, project, AI coach.</field>
+        </record>
+        <record id="plan_team" model="startupos.plan">
+            <field name="name">Team — $49/mo</field>
+            <field name="code">team</field>
+            <field name="price_monthly">49.0</field>
+            <field name="max_users">5</field>
+            <field name="ai_calls_per_month">2000</field>
+            <field name="storage_gb">10</field>
+            <field name="description">For teams. Adds helpdesk, expenses, email marketing, HR basics.</field>
+        </record>
+        <record id="plan_growth" model="startupos.plan">
+            <field name="name">Growth — $149/mo</field>
+            <field name="code">growth</field>
+            <field name="price_monthly">149.0</field>
+            <field name="max_users">15</field>
+            <field name="ai_calls_per_month">10000</field>
+            <field name="storage_gb">50</field>
+            <field name="description">For scaling startups. Adds recruitment, surveys, knowledge, BI.</field>
+        </record>
+        <record id="plan_scale" model="startupos.plan">
+            <field name="name">Scale — $499/mo</field>
+            <field name="code">scale</field>
+            <field name="price_monthly">499.0</field>
+            <field name="max_users">50</field>
+            <field name="ai_calls_per_month">1000000</field>
+            <field name="storage_gb">250</field>
+            <field name="description">Custom modules allowed, BYO AI key, priority support.</field>
+        </record>
+    </data>
+</odoo>

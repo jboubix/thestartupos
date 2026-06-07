@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+.env
+.env.local
+
+# k8s secrets (never commit)
+k8s/tenant/secrets.yaml.local
+k8s/platform/secrets.yaml.local
+
+# Odoo session files
+*.log
+.DS_Store

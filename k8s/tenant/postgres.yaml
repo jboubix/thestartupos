@@ -1,0 +1,43 @@
+# CNPG cluster for tenant databases.
+# Many Odoo databases live inside one PostgreSQL instance, separated by name.
+# Resource sizing assumes ~50 active tenant DBs on this node; scale storage as you grow.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: startupos-tenant-db
+  namespace: startupos
+  labels:
+    app: startupos
+    component: postgres
+    role: tenant
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.4
+  instances: 1
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 50Gi
+    storageClass: local-path
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "3Gi"
+      cpu: "2"
+  postgresql:
+    parameters:
+      max_connections: "300"          # headroom for Odoo workers + admin + AI proxy
+      shared_buffers: "1GB"
+      effective_cache_size: "2GB"
+      work_mem: "16MB"
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: postgres               # Odoo creates its own DBs via create_database
+      owner: postgres
+      secret:
+        name: startupos-tenant-db-credentials
+  backup:
+    retentionPolicy: "14d"
+    volumeSnapshot:
+      className: local-path

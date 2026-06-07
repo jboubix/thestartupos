@@ -1,0 +1,109 @@
+FROM odoo:19.1 AS builder
+
+USER root
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Build deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git \
+        curl \
+        python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- OCA modules ---
+# Branches follow Odoo major versions: 19.0 for Odoo 19.x.
+# Each repo's modules live at the root of the repo (not nested).
+ENV OCA_BRANCH=19.0
+ENV OCA_BASE=/opt/oca
+RUN mkdir -p ${OCA_BASE}
+
+# Verified OCA repos that have a 19.0 branch and contain modules we cite.
+# Names verified against github.com/OCA listing.
+clone_repo() {
+    local repo=$1
+    git clone --depth 1 --branch ${OCA_BRANCH} \
+        --quiet --single-branch \
+        https://github.com/OCA/${repo}.git ${OCA_BASE}/${repo} || \
+        echo "WARN: OCA/${repo} not found or no ${OCA_BRANCH} branch, skipping"
+}
+
+# UI / framework
+clone_repo web
+clone_repo server-ux
+clone_repo server-backend
+clone_repo server-tools
+
+# CRM / Sales / Invoicing extensions
+clone_repo sale-workflow
+clone_repo account-financial-tools
+clone_repo account-financial-reporting
+clone_repo account-reconcile
+clone_repo bank-payment
+clone_repo mis-builder
+clone_repo partner-contact
+
+# Projects / Helpdesk / Time tracking
+clone_repo project
+clone_repo hr
+clone_repo hr-expense
+clone_repo hr-timesheet
+clone_repo helpdesk
+
+# Marketing / Knowledge / Surveys
+clone_repo social
+clone_repo knowledge
+clone_repo survey
+
+# Inventory / Purchase
+clone_repo stock-logistics-workflow
+clone_repo purchase-workflow
+clone_repo manufacture
+
+# Misc
+clone_repo fleet
+clone_repo tier-validation
+clone_repo maintenance
+clone_repo field-service
+clone_repo queue
+clone_repo currency
+
+# --- Custom startupos modules (our IP) ---
+COPY odoo-modules/ /mnt/extra-addons/startupos/
+
+# Permissions
+RUN chown -R odoo:odoo ${OCA_BASE} /mnt/extra-addons
+
+# --- Runtime stage ---
+FROM odoo:19.1
+
+USER root
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# System deps
+RUN apt-get update && apt-get install -y --no-cache --no-install-recommends \
+        gettext-base \
+        curl \
+        postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy OCA modules + our custom modules
+COPY --from=builder /opt/oca /opt/oca
+COPY --from=builder /mnt/extra-addons /mnt/extra-addons
+
+# Build the addons path dynamically at container start (handles missing OCA repos gracefully).
+# Each /opt/oca/<repo> directory is added to addons_path if it exists and contains __manifest__.py files.
+COPY docker/entrypoint.sh /entrypoint-startupos.sh
+RUN chmod +x /entrypoint-startupos.sh
+
+# Allow chown for runtime dirs
+RUN mkdir -p /var/lib/odoo /mnt/extra-addons && \
+    chown -R odoo:odoo /var/lib/odoo /mnt/extra-addons /opt/oca
+
+USER odoo
+
+EXPOSE 8069 8072
+
+ENTRYPOINT ["/entrypoint-startupos.sh"]
+CMD ["odoo"]

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tenant tree view -->
+    <record id="view_tenant_tree" model="ir.ui.view">
+        <field name="name">startupos.tenant.tree</field>
+        <field name="model">startupos.tenant</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state=='active'" decoration-warning="state=='past_due'" decoration-muted="state=='cancelled' or state=='suspended'">
+                <field name="name"/>
+                <field name="subdomain"/>
+                <field name="plan_id"/>
+                <field name="state"/>
+                <field name="founder_email"/>
+                <field name="storage_used_mb"/>
+                <field name="ai_calls_this_month"/>
+                <field name="last_login_at"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Tenant form view -->
+    <record id="view_tenant_form" model="ir.ui.view">
+        <field name="name">startupos.tenant.form</field>
+        <field name="model">startupos.tenant</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_provision" string="(Re)Provision" type="object" class="btn-primary" attrs="{'invisible': [('provisioned_at','!=',False)]}"/>
+                    <button name="action_suspend" string="Suspend" type="object" attrs="{'invisible': [('state','=','suspended')]}"/>
+                    <button name="action_reactivate" string="Reactivate" type="object" attrs="{'invisible': [('state','!=','suspended')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="trial,active,past_due,suspended"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Acme Corp"/></h1>
+                        <h3>
+                            <field name="subdomain" placeholder="acmecorp" class="oe_inline"/>
+                            .thestartupos.com
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Plan &amp; Status">
+                            <field name="plan_id"/>
+                            <field name="state"/>
+                            <field name="trial_end_date"/>
+                            <field name="provisioned_at" readonly="1"/>
+                        </group>
+                        <group string="Founder">
+                            <field name="founder_name"/>
+                            <field name="founder_email"/>
+                            <field name="industry"/>
+                            <field name="stage"/>
+                        </group>
+                        <group string="Domain">
+                            <field name="db_name" readonly="1"/>
+                            <field name="custom_domain" placeholder="app.acmecorp.com"/>
+                        </group>
+                        <group string="Billing">
+                            <field name="stripe_customer_id"/>
+                            <field name="stripe_subscription_id"/>
+                        </group>
+                        <group string="Usage">
+                            <field name="last_login_at" readonly="1"/>
+                            <field name="storage_used_mb" readonly="1"/>
+                            <field name="ai_calls_this_month" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Internal notes about this tenant..."/>
+                        </page>
+                        <page string="Activity">
+                            <field name="activity_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_tenants" model="ir.actions.act_window">
+        <field name="name">Tenants</field>
+        <field name="res_model">startupos.tenant</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

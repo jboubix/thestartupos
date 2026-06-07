@@ -1,0 +1,20 @@
+{
+  "name": "startupos-ai-proxy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240605.0",
+    "wrangler": "^3.65.0",
+    "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "agents": "^0.0.50",
+    "hono": "^4.5.0"
+  }
+}

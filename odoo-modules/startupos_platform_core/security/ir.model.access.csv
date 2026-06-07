@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_startup_tenant_user,startupos.tenant user,model_startupos_tenant,base.group_user,1,0,0,0
+access_startup_tenant_admin,startupos.tenant admin,model_startupos_tenant,base.group_system,1,1,1,1
+access_startup_plan_user,startupos.plan user,model_startupos_plan,base.group_user,1,0,0,0
+access_startup_plan_admin,startupos.plan admin,model_startupos_plan,base.group_system,1,1,1,1
+access_startup_support_user,startupos.support.ticket user,model_startupos_support_ticket,base.group_user,1,0,0,0
+access_startup_support_admin,startupos.support.ticket admin,model_startupos_support_ticket,base.group_system,1,1,1,1

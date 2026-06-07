@@ -1,0 +1,28 @@
+name = "startupos-ai-proxy"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# AI Gateway: routes OpenAI/Anthropic/Gemini calls through your aigate.jboubix.net
+# so we have unified logging, rate limits, and billing.
+[[ai_gateway_bindings]]
+binding = "AI_GATEWAY"
+gateway = "aigate.jboubix.net"
+# The actual API key for aigate is set as a secret (wrangler secret put AIGATE_API_KEY)
+
+# KV stores per-tenant AI quotas and conversation history.
+# Namespace IDs are filled in after `wrangler kv:namespace create`.
+# [[kv_namespaces]]
+# binding = "QUOTAS"
+# id = "..."
+
+# Vectorize index for RAG over the startup playbook + tenant documents.
+# [[vectorize]]
+# binding = "RAG"
+# index_name = "startupos-rag"
+
+[vars]
+# Odoo JSON-RPC endpoint inside the cluster
+ODOO_RPC_URL = "http://startupos-tenant-odoo.startupos.svc.cluster.local:80/jsonrpc"
+# The multi-tenant Odoo master password (allows create_database / install modules)
+# Set with: wrangler secret put ODOO_MASTER_PASS

@@ -1,0 +1,6 @@
+{
+  "name": "AI Gateway",
+  "type": "ai-gateway-binding",
+  "binding_name": "AI_GATEWAY",
+  "id": "startupos-ai-gateway"
+}
