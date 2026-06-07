@@ -24,7 +24,11 @@ data:
     log_level = info
     log_handler = :INFO
     without_demo = True
-    list_db = False
+    list_db = True
     dbfilter = ^%d$
     db_name = False
+    db_host = __DB_HOST__
+    db_port = 5432
+    db_user = odoo
+    db_password = __DB_PASSWORD__
     server_wide_modules = base,web
