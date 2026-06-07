@@ -34,12 +34,17 @@ spec:
             - |
               PASS=$(cat /etc/secrets/odoo-master-pass)
               DB_PASS=$(cat /etc/db-credentials/password)
+              # OCA repos in the image (matches docker/clone-oca.sh).
+              # We can't enumerate /opt/oca here because the init container image is busybox,
+              # not the Odoo image (init containers run before COPY applies).
+              OCA="/opt/oca/web,/opt/oca/server-ux,/opt/oca/server-backend,/opt/oca/server-tools,/opt/oca/sale-workflow,/opt/oca/account-financial-tools,/opt/oca/account-financial-reporting,/opt/oca/account-reconcile,/opt/oca/bank-payment,/opt/oca/mis-builder,/opt/oca/partner-contact,/opt/oca/project,/opt/oca/hr,/opt/oca/hr-expense,/opt/oca/hr-timesheet,/opt/oca/helpdesk,/opt/oca/social,/opt/oca/knowledge,/opt/oca/survey,/opt/oca/stock-logistics-workflow,/opt/oca/purchase-workflow,/opt/oca/manufacture,/opt/oca/fleet,/opt/oca/tier-validation,/opt/oca/maintenance,/opt/oca/field-service,/opt/oca/queue,/opt/oca/currency"
+              ADDONS="${OCA},/mnt/extra-addons/startupos,/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons"
               sed -e "s|__ODOO_MASTER_PASS__|${PASS}|g" \
                   -e "s|__DB_HOST__|startupos-tenant-db-rw.startupos.svc.cluster.local|g" \
                   -e "s|__DB_PASSWORD__|${DB_PASS}|g" \
+                  -e "s|__ADDONS_PATH__|${ADDONS}|g" \
                   /config-template/odoo.conf > /config/odoo.conf
-              echo "Rendered config (first 12 lines):"
-              head -12 /config/odoo.conf
+              echo "Built addons_path with $(echo $ADDONS | tr ',' '\n' | wc -l) entries"
           volumeMounts:
             - name: odoo-config-template
               mountPath: /config-template
@@ -51,10 +56,10 @@ spec:
               mountPath: /etc/db-credentials
       containers:
         - name: odoo
-          # Use stock odoo:19.0 (Odoo 19.0 is the published 19.x base; .1 is a minor patch).
-          # Our custom image with OCA + startupos_* modules will replace this once built and pushed to GHCR.
-          image: odoo:19.0
-          imagePullPolicy: IfNotPresent
+          # Custom image: Odoo 19.0 + 28 OCA repos + 15 startupos_* modules.
+          # Built locally and imported via `k3s ctr images import` (no GHCR needed).
+          image: ghcr.io/jboubix/thestartupos-tenant-odoo:19.0
+          imagePullPolicy: Never
           command:
             - odoo
           args:
