@@ -12,6 +12,17 @@ ACCOUNT_ID="0c8037727859d73bd31f5c411c395c20"
 ZONE_ID="b59f87664728d41f1b0a751c2a1c4843"
 ZONE="thestartupos.com"
 
+# This account has two tokens:
+#   CLOUDFLARE_API_TOKEN (cfut_*)  — scoped, DNS read-only for most zones.
+#   CLOUDFLARE_USER_TOKEN (cfk_*)  — Global API Key, full zone access.
+# DNS WRITE on thestartupos.com needs the global key (X-Auth-Key header).
+GLOBAL_KEY="${CLOUDFLARE_USER_TOKEN:-${CLOUDFLARE_API_TOKEN:-}}"
+if [[ -z "${GLOBAL_KEY}" ]]; then
+  echo "ERROR: CLOUDFLARE_USER_TOKEN or CLOUDFLARE_API_TOKEN must be set." >&2
+  exit 1
+fi
+CLOUDFLARE_EMAIL="${CLOUDFLARE_EMAIL:-youness@elabbassi.org}"
+
 # Get tunnel ID from operator status, or arg
 if [[ -n "${1:-}" ]]; then
   TUNNEL_ID="$1"
@@ -30,9 +41,9 @@ echo "Creating wildcard CNAME: *.thestartupos.com → ${TUNNEL_ID}.cfargotunnel.
 # Idempotent: check if record exists
 EXISTING=$(curl -s \
   "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records?name=*.${ZONE}&type=CNAME" \
-  -H "X-Auth-Key: ${CLOUDFLARE_API_TOKEN}" \
+  -H "X-Auth-Key: ${GLOBAL_KEY}" \
   -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
-  | python3 -c "import sys, json; d=json.load(sys.stdin); print(len(d.get('result', [])))")
+  | python3 -c "import sys, json; d=json.load(sys.stdin); r=d.get('result') or []; print(len(r))")
 
 if [[ "$EXISTING" -gt 0 ]]; then
   echo "Wildcard CNAME already exists. Skipping."
@@ -40,7 +51,7 @@ if [[ "$EXISTING" -gt 0 ]]; then
 fi
 
 curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
-  -H "X-Auth-Key: ${CLOUDFLARE_API_TOKEN}" \
+  -H "X-Auth-Key: ${GLOBAL_KEY}" \
   -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
   -H "Content-Type: application/json" \
   -d "{

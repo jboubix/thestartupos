@@ -7,14 +7,14 @@ metadata:
     app: startupos
     component: odoo
 data:
-  odoo.conf.tmpl: |
+  odoo.conf: |
     [options]
-    addons_path = ${ODOO_ADDONS_PATH}
+    addons_path = /usr/lib/python3/dist-packages/odoo/addons
     data_dir = /var/lib/odoo
-    admin_passwd = ${ODOO_MASTER_PASS}
+    admin_passwd = __ODOO_MASTER_PASS__
     http_port = 8069
     proxy_mode = True
-    workers = 4
+    workers = 2
     limit_memory_soft = 536870912
     limit_memory_hard = 1073741824
     limit_request = 8192
@@ -24,7 +24,7 @@ data:
     log_level = info
     log_handler = :INFO
     without_demo = True
-    list_db = False                          # hide DB selector from public
-    dbfilter = ^%d$                          # route by subdomain
-    db_name = False                          # disable /web/database/manager
+    list_db = False
+    dbfilter = ^%d$
+    db_name = False
     server_wide_modules = base,web
