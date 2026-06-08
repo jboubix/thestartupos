@@ -1,0 +1,47 @@
+name: Initiative
+description: Track a larger product/technical initiative made of multiple issues
+title: "[Initiative]: "
+labels: ["initiative", "needs-triage"]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: What business/customer outcome should this initiative create?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      value: |
+        ## In scope
+        -
+
+        ## Out of scope
+        -
+    validations:
+      required: true
+  - type: dropdown
+    id: moscow
+    attributes:
+      label: MoSCoW classification
+      options:
+        - Must have
+        - Should have
+        - Could have
+        - Won't have / later
+    validations:
+      required: true
+  - type: textarea
+    id: milestones
+    attributes:
+      label: Milestones / child issues
+      value: |
+        - [ ]
+        - [ ]
+        - [ ]
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / open questions

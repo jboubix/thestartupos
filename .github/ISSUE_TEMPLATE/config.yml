@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: The Startup OS live site
+    url: https://thestartupos.com
+    about: Check the public apex tenant before filing website issues.

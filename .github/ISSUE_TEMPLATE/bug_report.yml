@@ -1,0 +1,56 @@
+name: Bug report
+description: Report a reproducible defect in The Startup OS
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What is broken?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Odoo tenant
+        - Platform/admin
+        - Provisioning
+        - Infrastructure/k8s
+        - Website/theme
+        - Billing
+        - AI agent
+        - Other
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - Blocks launch / production use
+        - Degrades core workflow
+        - Minor inconvenience
+        - Cosmetic

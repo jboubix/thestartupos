@@ -1,0 +1,51 @@
+name: Feature proposal
+description: Propose a product/platform capability
+title: "[Proposal]: "
+labels: ["proposal", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / opportunity
+      description: What customer or operator problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the smallest useful version first.
+    validations:
+      required: true
+  - type: dropdown
+    id: moscow
+    attributes:
+      label: MoSCoW classification
+      options:
+        - Must have
+        - Should have
+        - Could have
+        - Won't have / later
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      value: |
+        -
+        -
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Odoo tenant
+        - Platform/admin
+        - Provisioning
+        - Infrastructure/k8s
+        - Website/theme
+        - Billing
+        - AI agent
+        - Growth/marketing
+        - Other
