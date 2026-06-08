@@ -55,6 +55,7 @@ thestartupos/
 │   ├── startupos_platform_monitoring/   # Health/quota per tenant
 │   ├── startupos_platform_support/      # Impersonation, audit log
 │   ├── startupos_onboarding/            # Tenant-facing wizard
+│   ├── startupos_theme/                 # Apex marketing website theme
 │   ├── startupos_dashboard/             # Startup health view
 │   ├── startupos_templates/             # Pre-seeded Lean Canvas etc.
 │   ├── startupos_ai_agent/              # RAG + Odoo tool calls
@@ -114,7 +115,7 @@ curl -I https://test.thestartupos.com
 | Discuss (chat) | Community | `mail`, `discuss` |
 | To-Do | Community | `note` |
 | Contacts | Community | `contacts` |
-| Website | Community | `website` |
+| Website | Community + custom | `website`, `startupos_theme` |
 | eCommerce | Community | `website_sale` |
 | Blog | Community | `website_blog` |
 | Live Chat | Community | `im_livechat` |

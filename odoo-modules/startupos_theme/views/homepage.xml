@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="homepage" inherit_id="website.homepage" name="The Startup OS Homepage">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="startupos-homepage">
+                <section class="startupos-hero">
+                    <div class="container">
+                        <div class="startupos-hero__eyebrow">The Startup OS</div>
+                        <h1>Run your startup from one founder-first workspace.</h1>
+                        <p class="startupos-hero__lead">
+                            The Startup OS gives non-technical founders a curated Odoo stack for CRM,
+                            sales, invoicing, projects, support, knowledge, and AI-assisted operations —
+                            hosted per tenant under your own startup subdomain.
+                        </p>
+                        <div class="startupos-hero__actions">
+                            <a class="btn btn-primary btn-lg" href="/contactus">Request access</a>
+                            <a class="btn btn-outline-light btn-lg" href="/odoo">Operator login</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="startupos-section">
+                    <div class="container">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="startupos-card">
+                                    <h2>Curated Odoo</h2>
+                                    <p>CRM, quotes, invoices, projects, timesheets, helpdesk, email, website, and reporting installed as a coherent tenant workspace.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="startupos-card">
+                                    <h2>Built for founders</h2>
+                                    <p>Startup templates, onboarding flows, dashboards, and AI guidance reduce the operational overhead of running a young company.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="startupos-card">
+                                    <h2>Tenant-native</h2>
+                                    <p>Each startup runs on its own database and subdomain while the apex tenant remains the public marketing and platform entry point.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="startupos-section startupos-section--dark">
+                    <div class="container">
+                        <div class="row align-items-center g-5">
+                            <div class="col-lg-6">
+                                <h2>Everything you need after incorporation.</h2>
+                                <p>
+                                    Keep customers, revenue, tasks, documents, expenses, support, and investor-ready metrics in one operating system instead of a pile of disconnected SaaS tools.
+                                </p>
+                            </div>
+                            <div class="col-lg-6">
+                                <ul class="startupos-list">
+                                    <li>Tenant provisioning with wildcard subdomains</li>
+                                    <li>Startup health dashboard and operational templates</li>
+                                    <li>Odoo-native workflows with AI-assisted execution</li>
+                                    <li>Platform controls for billing, support, DNS, and monitoring</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="startupos-cta">
+                    <div class="container">
+                        <h2>Make Odoo your startup back office from day one.</h2>
+                        <p>Start with a clean tenant workspace and grow into the full operating stack.</p>
+                        <a class="btn btn-light btn-lg" href="/contactus">Talk to us</a>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+</odoo>
